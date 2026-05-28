@@ -8,7 +8,9 @@ const ProtectedRoute = () => {
     (state) => state.auth
   );
 
-  return userInfo ? <Outlet /> : <Navigate to="/login" />;
+  return userInfo
+    ? <Outlet />
+    : <Navigate to="/login" />;
 };
 
 export default ProtectedRoute;

@@ -1,31 +1,112 @@
 import express from "express";
+
 import cors from "cors";
 
-import authRoutes from "./routes/authRoutes.js";
+
+
+/* =========================
+   Route Imports
+========================= */
+
+import authRoutes
+from "./routes/authRoutes.js";
+
+import aiRoutes
+from "./routes/aiRoutes.js";
+
+
+
+/* =========================
+   Middleware Imports
+========================= */
+
+import {
+  notFound,
+  errorHandler,
+} from "./middleware/errorMiddleware.js";
+
+
 
 const app = express();
 
 
-// Middleware
+
+/* =========================
+   Core Middlewares
+========================= */
+
+/* Enable CORS */
+app.use(cors());
+
+
+
+/* Parse JSON */
 app.use(express.json());
 
 
-// CORS Configuration
+
+/* Parse Form Data */
 app.use(
-  cors({
-    origin: "http://localhost:5173",
-    credentials: true,
+  express.urlencoded({
+    extended: true,
   })
 );
 
 
-// Routes
-app.use("/api/auth", authRoutes);
 
+/* =========================
+   Health Check Route
+========================= */
 
-// Test Route
 app.get("/", (req, res) => {
-  res.send("PrepAI API Running...");
+
+  res.status(200).json({
+
+    success: true,
+
+    message:
+      "PrepAI Backend API Running 🚀",
+
+  });
+
 });
+
+
+
+/* =========================
+   API Routes
+========================= */
+
+/* Authentication APIs */
+app.use(
+  "/api/auth",
+  authRoutes
+);
+
+
+
+/* AI Interview APIs */
+app.use(
+  "/api/ai",
+  aiRoutes
+);
+
+
+
+/* =========================
+   404 Middleware
+========================= */
+
+app.use(notFound);
+
+
+
+/* =========================
+   Global Error Middleware
+========================= */
+
+app.use(errorHandler);
+
+
 
 export default app;
