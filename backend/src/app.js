@@ -1,112 +1,172 @@
 import express from "express";
-
 import cors from "cors";
+import dotenv from "dotenv";
 
-
-
-/* =========================
-   Route Imports
-========================= */
-
-import authRoutes
-from "./routes/authRoutes.js";
-
-import aiRoutes
-from "./routes/aiRoutes.js";
-
-
-
-/* =========================
-   Middleware Imports
-========================= */
-
-import {
-  notFound,
-  errorHandler,
-} from "./middleware/errorMiddleware.js";
-
-
+dotenv.config();
 
 const app = express();
 
 
 
-/* =========================
-   Core Middlewares
-========================= */
+// DATABASE
+import connectDB from "./config/db.js";
 
-/* Enable CORS */
+connectDB();
+
+
+
+// MIDDLEWARE
 app.use(cors());
 
-
-
-/* Parse JSON */
 app.use(express.json());
 
-
-
-/* Parse Form Data */
-app.use(
-  express.urlencoded({
-    extended: true,
-  })
-);
+app.use(express.urlencoded({
+  extended: true,
+}));
 
 
 
-/* =========================
-   Health Check Route
-========================= */
+// ROUTES
 
-app.get("/", (req, res) => {
+// AUTH
+import authRoutes
+from "./routes/authRoutes.js";
 
-  res.status(200).json({
+// USERS
+import userRoutes
+from "./routes/userRoutes.js";
 
-    success: true,
+// INTERVIEW
+import interviewRoutes
+from "./routes/interviewRoutes.js";
 
-    message:
-      "PrepAI Backend API Running 🚀",
+// RESUME
+import resumeRoutes
+from "./routes/resumeRoutes.js";
 
-  });
+// NOTES
+import notesRoutes
+from "./routes/notesRoutes.js";
 
-});
+// MOCK TESTS
+import testRoutes
+from "./routes/testRoutes.js";
+
+// RESULTS
+import resultRoutes
+from "./routes/resultRoutes.js";
+
+// LEADERBOARD
+import leaderboardRoutes
+from "./routes/leaderboardRoutes.js";
+
+// AI QUIZ
+import aiQuizRoutes
+from "./routes/aiQuizRoutes.js";
 
 
 
-/* =========================
-   API Routes
-========================= */
+// API ROUTES
 
-/* Authentication APIs */
 app.use(
   "/api/auth",
   authRoutes
 );
 
-
-
-/* AI Interview APIs */
 app.use(
-  "/api/ai",
-  aiRoutes
+  "/api/users",
+  userRoutes
+);
+
+app.use(
+  "/api/interview",
+  interviewRoutes
+);
+
+app.use(
+  "/api/resume",
+  resumeRoutes
+);
+
+app.use(
+  "/api/notes",
+  notesRoutes
+);
+
+app.use(
+  "/api/tests",
+  testRoutes
+);
+
+app.use(
+  "/api/results",
+  resultRoutes
+);
+
+app.use(
+  "/api/leaderboard",
+  leaderboardRoutes
+);
+
+app.use(
+  "/api/ai-quiz",
+  aiQuizRoutes
 );
 
 
 
-/* =========================
-   404 Middleware
-========================= */
+// ROOT ROUTE
 
-app.use(notFound);
+app.get("/", (req, res) => {
+
+  res.json({
+
+    success: true,
+
+    message:
+      "PrepAI Backend API Running 🚀",
+  });
+});
 
 
 
-/* =========================
-   Global Error Middleware
-========================= */
+// 404 HANDLER
 
-app.use(errorHandler);
+app.use((req, res) => {
+
+  res.status(404).json({
+
+    success: false,
+
+    message: "Route Not Found",
+  });
+});
 
 
+
+// GLOBAL ERROR HANDLER
+
+app.use(
+  (
+    err,
+    req,
+    res,
+    next
+  ) => {
+
+    console.error(err);
+
+    res.status(
+      err.status || 500
+    ).json({
+
+      success: false,
+
+      message:
+        err.message ||
+        "Server Error",
+    });
+  }
+);
 
 export default app;

@@ -128,3 +128,109 @@
     @apply font-sans;
     }
 }
+
+/* ========================================
+   PREPAI GLOBAL STYLES
+======================================== */
+
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100%;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+
+
+/* BODY */
+body {
+  background: black;
+}
+
+
+
+/* SCROLLBAR */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #09090b;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    to bottom,
+    #9333ea,
+    #2563eb
+  );
+
+  border-radius: 999px;
+}
+
+
+
+/* RESPONSIVE TEXT */
+h1 {
+  line-height: 1.1;
+}
+
+h2 {
+  line-height: 1.2;
+}
+
+
+
+/* BUTTON FIX */
+button {
+  cursor: pointer;
+}
+
+
+
+/* INPUT FIX */
+input,
+textarea,
+select {
+  outline: none;
+}
+
+
+
+/* CARD HOVER */
+.glass-card {
+  transition: all 0.3s ease;
+}
+
+.glass-card:hover {
+  transform: translateY(-4px);
+}
+
+
+
+/* RESPONSIVE FIX */
+img {
+  max-width: 100%;
+}
+
+
+
+/* DASHBOARD CONTENT */
+.dashboard-container {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+
+
+/* MOBILE RESPONSIVE */
+@media (max-width: 768px) {
+
+  .sidebar {
+    width: 100%;
+    min-height: auto;
+  }
+
+}

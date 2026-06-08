@@ -3,16 +3,12 @@ import {
   useLocation,
 } from "react-router-dom";
 
-
-
 const Sidebar = () => {
 
   const location =
     useLocation();
 
-
-
-  const navItems = [
+  const menuItems = [
 
     {
       name: "Dashboard",
@@ -60,86 +56,63 @@ const Sidebar = () => {
     },
   ];
 
-
-
   return (
 
-    <aside
+    <div
       className="
-        w-[250px]
-        h-screen
+        w-[300px]
+        min-h-screen
         bg-black
         border-r
         border-white/10
-        px-5
-        py-6
-        flex
-        flex-col
-        shrink-0
-        overflow-hidden
+        p-6
       "
     >
 
-      {/* LOGO */}
-      <div className="mb-8">
-
-        <h1
-          className="
-            text-5xl
-            font-extrabold
-            bg-gradient-to-r
-            from-purple-400
-            to-blue-500
-            bg-clip-text
-            text-transparent
-          "
-        >
-
-          PrepAI
-
-        </h1>
-
-      </div>
-
-
-
-      {/* NAVIGATION */}
-      <nav
+      <h1
         className="
-          flex
-          flex-col
-          gap-3
-          overflow-y-auto
-          pr-1
+          text-5xl
+          font-bold
+          text-purple-400
+          mb-14
         "
       >
+        PrepAI
+      </h1>
+
+      <div className="space-y-4">
 
         {
-          navItems.map(
+          menuItems.map(
             (item) => (
 
               <Link
-
-                key={item.name}
-
+                key={item.path}
                 to={item.path}
-
                 className={`
-                  px-5
-                  py-4
+                  block
+                  p-5
                   rounded-3xl
-                  text-lg
+                  text-xl
                   font-semibold
                   transition-all
-                  duration-300
 
                   ${
                     location.pathname ===
                     item.path
 
-                      ? "bg-gradient-to-r from-purple-600 to-blue-500"
+                      ? `
+                        bg-gradient-to-r
+                        from-purple-600
+                        to-blue-500
+                        text-white
+                      `
 
-                      : "bg-white/5 hover:bg-white/10"
+                      : `
+                        bg-white/5
+                        text-white
+                        hover:bg-white/10
+                      `
                   }
                 `}
               >
@@ -151,9 +124,9 @@ const Sidebar = () => {
           )
         }
 
-      </nav>
+      </div>
 
-    </aside>
+    </div>
   );
 };
 

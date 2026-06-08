@@ -1,8 +1,10 @@
 import express from "express";
 
 import {
-  generateInterview,
-} from "../controllers/interviewController.js";
+  generateAIQuiz,
+} from "../controllers/aiQuizController.js";
+
+
 
 const router =
   express.Router();
@@ -11,9 +13,7 @@ const router =
 
 router.post(
   "/generate",
-  generateInterview
+  generateAIQuiz
 );
-
-
 
 export default router;

@@ -1,114 +1,154 @@
-import Sidebar from "../components/dashboard/Sidebar";
-
 const Dashboard = () => {
 
   return (
 
     <div
       className="
-        flex
-        min-h-screen
-        bg-black
-        text-white
+        w-full
       "
     >
 
-      {/* Sidebar */}
-      <Sidebar />
+      {/* TITLE */}
+      <h1
+        className="
+          text-4xl
+          md:text-5xl
+          lg:text-6xl
+          font-bold
+          mb-10
+        "
+      >
+
+        Welcome to PrepAI 🚀
+
+      </h1>
 
 
 
-      {/* Main Content */}
-      <div className="flex-1 p-8">
+      {/* CARDS */}
+      <div
+        className="
+          grid
+          grid-cols-1
+          md:grid-cols-2
+          xl:grid-cols-3
+          max-w-7xl
+          gap-6
+        "
+      >
 
-        <h1 className="text-4xl font-bold mb-8">
-
-          Welcome to PrepAI 🚀
-
-        </h1>
-
-
-
-        {/* Cards */}
+        {/* CARD */}
         <div
           className="
-            grid
-            grid-cols-1
-            md:grid-cols-2
-            lg:grid-cols-3
-            gap-6
+            bg-white/10
+            border
+            border-white/10
+            rounded-3xl
+            p-8
           "
         >
 
-          {/* Card 1 */}
-          <div
+          <h2
             className="
-              p-6
-              rounded-3xl
-              bg-white/10
-              border
-              border-white/10
-              backdrop-blur-xl
+              text-3xl
+              font-bold
+              mb-4
             "
           >
 
-            <h2 className="text-2xl font-semibold mb-3">
-              AI Interviews
-            </h2>
+            AI Interviews
 
-            <p className="text-gray-300">
-              Practice AI-generated interview questions.
-            </p>
+          </h2>
 
-          </div>
-
-
-
-          {/* Card 2 */}
-          <div
+          <p
             className="
-              p-6
-              rounded-3xl
-              bg-white/10
-              border
-              border-white/10
-              backdrop-blur-xl
+              text-gray-400
+              text-lg
             "
           >
 
-            <h2 className="text-2xl font-semibold mb-3">
-              Resume Analyzer
-            </h2>
+            Practice AI-generated
+            interview questions.
 
-            <p className="text-gray-300">
-              Analyze resumes with AI feedback.
-            </p>
+          </p>
 
-          </div>
+        </div>
 
 
 
-          {/* Card 3 */}
-          <div
+        {/* CARD */}
+        <div
+          className="
+            bg-white/10
+            border
+            border-white/10
+            rounded-3xl
+            p-8
+          "
+        >
+
+          <h2
             className="
-              p-6
-              rounded-3xl
-              bg-white/10
-              border
-              border-white/10
-              backdrop-blur-xl
+              text-3xl
+              font-bold
+              mb-4
             "
           >
 
-            <h2 className="text-2xl font-semibold mb-3">
-              Mock Tests
-            </h2>
+            Resume Analyzer
 
-            <p className="text-gray-300">
-              Improve technical interview preparation.
-            </p>
+          </h2>
 
-          </div>
+          <p
+            className="
+              text-gray-400
+              text-lg
+            "
+          >
+
+            Analyze resumes with
+            AI feedback.
+
+          </p>
+
+        </div>
+
+
+
+        {/* CARD */}
+        <div
+          className="
+            bg-white/10
+            border
+            border-white/10
+            rounded-3xl
+            p-8
+          "
+        >
+
+          <h2
+            className="
+              text-3xl
+              font-bold
+              mb-4
+            "
+          >
+
+            Mock Tests
+
+          </h2>
+
+          <p
+            className="
+              text-gray-400
+              text-lg
+            "
+          >
+
+            Improve technical
+            interview preparation.
+
+          </p>
 
         </div>
 

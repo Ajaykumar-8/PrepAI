@@ -1,62 +1,20 @@
 import axios from "axios";
 
-
-
 const API =
-  axios.create({
-
-    baseURL:
-      "http://localhost:5000/api",
-
-  });
+  "http://localhost:5000/api/interview/generate";
 
 
 
-export const generateAIInterview =
-  async (
-    formData,
-    token
-  ) => {
+export const generateInterview =
+  async (data) => {
 
     try {
 
-      console.log(
-        "Sending Request To Backend"
-      );
-
-
-
-      const config = {
-
-        headers: {
-
-          Authorization:
-            `Bearer ${token}`,
-
-          "Content-Type":
-            "application/json",
-        },
-      };
-
-
-
       const response =
-        await API.post(
-
-          "/ai/generate",
-
-          formData,
-
-          config
+        await axios.post(
+          API,
+          data
         );
-
-
-
-      console.log(
-        response.data
-      );
-
-
 
       return response.data;
 

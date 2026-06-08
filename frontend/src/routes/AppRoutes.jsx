@@ -4,30 +4,44 @@ import {
   Route,
 } from "react-router-dom";
 
+import Home
+from "../pages/Home";
 
+import Dashboard
+from "../pages/Dashboard";
 
-/* Pages */
+import InterviewPage
+from "../pages/InterviewPage";
 
-import Home from "../pages/Home";
+import TestsPage
+from "../pages/TestsPage";
 
-import Login from "../pages/auth/Login";
+import AnalyticsPage
+from "../pages/AnalyticsPage";
 
-import Signup from "../pages/auth/Signup";
+import LeaderboardPage
+from "../pages/LeaderboardPage";
 
-import ForgotPassword from "../pages/auth/ForgotPassword";
+import HistoryPage
+from "../pages/HistoryPage";
 
-import Dashboard from "../pages/Dashboard";
+import Login
+from "../pages/auth/Login";
 
-import InterviewPage from "../pages/InterviewPage";
+import Signup
+from "../pages/auth/Signup";
 
+import ForgotPassword
+from "../pages/auth/ForgotPassword";
 
+import DashboardLayout
+from "../layouts/DashboardLayout";
 
-/* Protected Route */
+import TestInterface
+from "../features/tests/pages/TestInterface";
 
-import ProtectedRoute
-from "./ProtectedRoute";
-
-
+import ResultPage
+from "../pages/ResultPage";
 
 const AppRoutes = () => {
 
@@ -37,7 +51,7 @@ const AppRoutes = () => {
 
       <Routes>
 
-        {/* Public Routes */}
+        {/* HOME */}
 
         <Route
           path="/"
@@ -46,19 +60,17 @@ const AppRoutes = () => {
 
 
 
+        {/* AUTH */}
+
         <Route
           path="/login"
           element={<Login />}
         />
 
-
-
         <Route
           path="/signup"
           element={<Signup />}
         />
-
-
 
         <Route
           path="/forgot-password"
@@ -67,20 +79,49 @@ const AppRoutes = () => {
 
 
 
-        {/* Protected Routes */}
+        {/* DASHBOARD LAYOUT */}
 
-        <Route element={<ProtectedRoute />}>
+        <Route
+          element={<DashboardLayout />}
+        >
+          <Route
+  path="/test-interface"
+  element={<TestInterface />}
+/>
+
+          <Route
+            path="/result"
+            element={<ResultPage />}
+          />
 
           <Route
             path="/dashboard"
             element={<Dashboard />}
           />
 
-
-
           <Route
             path="/interview"
             element={<InterviewPage />}
+          />
+
+          <Route
+            path="/tests"
+            element={<TestsPage />}
+          />
+
+          <Route
+            path="/analytics"
+            element={<AnalyticsPage />}
+          />
+
+          <Route
+            path="/leaderboard"
+            element={<LeaderboardPage />}
+          />
+
+          <Route
+            path="/history"
+            element={<HistoryPage />}
           />
 
         </Route>

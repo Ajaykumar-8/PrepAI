@@ -2,27 +2,19 @@ import axios from "axios";
 
 
 
-export const generateAIInterview =
-  async (
-    role,
+export const generateQuizQuestions =
+  async ({
     topic,
-    difficulty
-  ) => {
+    difficulty,
+  }) => {
 
     try {
 
       const prompt = `
 
-You are an expert technical interviewer.
+You are an expert technical quiz generator.
 
-Generate:
-
-1. Interview Question
-2. Detailed Answer
-3. Explanation
-
-Role:
-${role}
+Generate 5 multiple choice questions.
 
 Topic:
 ${topic}
@@ -30,7 +22,28 @@ ${topic}
 Difficulty:
 ${difficulty}
 
-Make the interview realistic and professional.
+Rules:
+- professional interview level
+- realistic technical questions
+- provide 4 options
+- provide correct answer
+- provide explanation
+
+Response format:
+
+[
+  {
+    "question": "...",
+    "options": [
+      "...",
+      "...",
+      "...",
+      "..."
+    ],
+    "correctAnswer": 0,
+    "explanation": "..."
+  }
+]
 
 `;
 
@@ -42,12 +55,10 @@ Make the interview realistic and professional.
           "https://openrouter.ai/api/v1/chat/completions",
 
           {
-
             model:
               "openai/gpt-3.5-turbo",
 
             messages: [
-
               {
                 role: "user",
                 content: prompt,
@@ -56,7 +67,6 @@ Make the interview realistic and professional.
           },
 
           {
-
             headers: {
 
               Authorization:
@@ -70,20 +80,38 @@ Make the interview realistic and professional.
 
 
 
-      return response.data
-        .choices[0]
-        .message.content;
+      const aiResponse =
+        response.data
+          .choices[0]
+          .message.content;
+
+
+
+      console.log(
+        "AI Quiz Response:"
+      );
+
+      console.log(aiResponse);
+
+
+
+      return aiResponse;
 
     } catch (error) {
 
       console.log(
-        "AI ERROR:",
+        "AI QUIZ ERROR:"
+      );
+
+      console.log(
         error.response?.data ||
         error.message
       );
 
+
+
       throw new Error(
-        "AI Generation Failed"
+        "AI Quiz Generation Failed"
       );
     }
   };
