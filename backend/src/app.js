@@ -64,7 +64,17 @@ from "./routes/leaderboardRoutes.js";
 import aiQuizRoutes
 from "./routes/aiQuizRoutes.js";
 
+// CODING
+import codingRoutes
+from "./routes/codingRoutes.js";
 
+// ADMIN QUESTION MANAGEMENT
+//import adminQuestionRoutes
+//from "./routes/adminQuestionRoutes.js";
+
+// QUESTION MANAGEMENT
+import questionRoutes 
+from "./routes/questionRoutes.js";
 
 // API ROUTES
 
@@ -113,6 +123,17 @@ app.use(
   aiQuizRoutes
 );
 
+app.use(
+  "/api/coding",
+  codingRoutes
+);
+
+/*app.use(
+  "/api/admin/questions",
+  adminQuestionRoutes
+);*/
+
+app.use("/api/admin/questions", questionRoutes);
 
 
 // ROOT ROUTE

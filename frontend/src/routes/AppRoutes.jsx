@@ -43,6 +43,15 @@ from "../features/tests/pages/TestInterface";
 import ResultPage
 from "../pages/ResultPage";
 
+import NotesPage
+from "../features/notes/pages/NotesPage";
+
+import CodingPage
+from "../features/coding/pages/CodingPage";
+
+import QuestionGeneratorPage
+from "../features/admin/questions/pages/QuestionGeneratorPage";
+
 const AppRoutes = () => {
 
   return (
@@ -85,9 +94,9 @@ const AppRoutes = () => {
           element={<DashboardLayout />}
         >
           <Route
-  path="/test-interface"
-  element={<TestInterface />}
-/>
+          path="/test-interface"
+          element={<TestInterface />}
+        />
 
           <Route
             path="/result"
@@ -124,7 +133,24 @@ const AppRoutes = () => {
             element={<HistoryPage />}
           />
 
-        </Route>
+          <Route
+          path="/notes"
+          element={<NotesPage />}
+          />
+
+          <Route
+            path="/coding"
+            element={<CodingPage />}
+            />
+
+            <Route
+              path="/admin/questions"
+              element={
+                <QuestionGeneratorPage />
+              }
+            />
+
+          </Route>
 
       </Routes>
 

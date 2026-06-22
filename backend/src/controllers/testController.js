@@ -1,59 +1,56 @@
-import Question
-from "../models/Question.js";
+import Question from "../models/Question.js";
 
+export const getQuestions = async (req, res) => {
+  try {
+    const { topic, difficulty } = req.query;
 
-
-export const getQuestions =
-  async (
-    req,
-    res
-  ) => {
-
-    try {
-
-      const {
+    // Count matching questions
+    const totalQuestions =
+      await Question.countDocuments({
         topic,
         difficulty,
-      } = req.query;
-
-
-
-      const questions =
-        await Question.aggregate([
-
-          {
-            $match: {
-
-              topic,
-
-              difficulty,
-            },
-          },
-
-          {
-            $sample: {
-              size: 10,
-            },
-          },
-        ]);
-
-
-
-      res.json({
-
-        success: true,
-
-        questions,
       });
 
-    } catch (error) {
+    console.log(
+      `Topic: ${topic}, Difficulty: ${difficulty}`
+    );
 
-      res.status(500).json({
+    console.log(
+      `Matching Questions: ${totalQuestions}`
+    );
 
-        success: false,
+    // Get random questions
+    const questions =
+      await Question.aggregate([
+        {
+          $match: {
+            topic,
+            difficulty,
+          },
+        },
+        {
+          $sample: {
+            size: Math.min(
+              totalQuestions,
+              10
+            ),
+          },
+        },
+      ]);
 
-        message:
-          error.message,
-      });
-    }
-  };
+    res.status(200).json({
+      success: true,
+      totalQuestions,
+      returnedQuestions:
+        questions.length,
+      questions,
+    });
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};

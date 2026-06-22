@@ -55,6 +55,11 @@ const Sidebar = () => {
     },
 
     {
+      name: "Coding",
+      path: "/coding",
+    },
+
+    {
       name: "Profile",
       path: "/profile",
     },
