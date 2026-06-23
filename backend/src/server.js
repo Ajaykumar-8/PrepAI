@@ -17,7 +17,4 @@ app.listen(PORT, () => {
   console.log(
     `Server running on port ${PORT}`
   );
-  console.log(
-  process.env.OPENROUTER_API_KEY
-);
 });

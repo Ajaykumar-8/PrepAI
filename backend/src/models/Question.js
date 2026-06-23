@@ -1,24 +1,50 @@
-import mongoose
-from "mongoose";
+import mongoose from "mongoose";
 
 const questionSchema =
-  new mongoose.Schema({
+  new mongoose.Schema(
+    {
+      question: {
+        type: String,
+        required: true,
+      },
 
-    question: String,
+      options: {
+        type: [String],
+        required: true,
+      },
 
-    options: [String],
+      correctAnswer: {
+        type: Number,
+        required: true,
+      },
 
-    correctAnswer: Number,
+      topic: {
+        type: String,
+        required: true,
+        lowercase: true,
+        trim: true,
+      },
 
-    topic: String,
+      difficulty: {
+        type: String,
+        required: true,
+        lowercase: true,
+        trim: true,
+      },
 
-    difficulty: String,
+      category: {
+        type: String,
+        required: true,
+      },
 
-    category: String,
-
-    explanation: String,
-
-  });
+      explanation: {
+        type: String,
+      },
+    },
+    {
+      timestamps: true,
+    }
+  );
 
 export default mongoose.model(
   "Question",

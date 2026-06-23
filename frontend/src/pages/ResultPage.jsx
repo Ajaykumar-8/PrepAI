@@ -3,136 +3,90 @@ import {
   useNavigate,
 } from "react-router-dom";
 
-
-
 const ResultPage = () => {
-
-  const location =
-    useLocation();
-
   const navigate =
     useNavigate();
 
+  const { state } =
+    useLocation();
 
+  if (!state) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-white">
+        No Result Found
+      </div>
+    );
+  }
 
   const {
     score,
     total,
-  } = location.state || {
-
-    score: 0,
-    total: 0,
-  };
-
-
-
-  const percentage =
-    total > 0
-
-      ? Math.round(
-          (score / total) * 100
-        )
-
-      : 0;
-
-
+    accuracy,
+    questions,
+    userAnswers,
+  } = state;
 
   return (
-
-    <div
-      className="
-        min-h-screen
-        bg-black
-        text-white
-        flex
-        items-center
-        justify-center
-        p-10
-      "
-    >
-
+    <div className="min-h-screen bg-black text-white flex items-center justify-center">
       <div
         className="
-          w-full
-          max-w-3xl
           bg-white/10
-          border
-          border-white/10
-          rounded-3xl
           p-10
+          rounded-3xl
           text-center
+          w-full
+          max-w-2xl
         "
       >
-
-        <h1
-          className="
-            text-6xl
-            font-bold
-            mb-10
-          "
-        >
-
+        <h1 className="text-5xl font-bold mb-8">
           Test Result 🚀
-
         </h1>
 
+        <p className="text-3xl mb-4">
+          Score: {score} / {total}
+        </p>
 
+        <p className="text-2xl text-purple-400 mb-8">
+          {accuracy}% Accuracy
+        </p>
 
-        <div
-          className="
-            text-4xl
-            mb-6
-          "
-        >
+        <div className="flex gap-4 justify-center">
+          {/* BACK */}
+          <button
+            onClick={() =>
+              navigate("/tests")
+            }
+            className="
+              px-8 py-4
+              rounded-xl
+              bg-gradient-to-r
+              from-purple-600
+              to-blue-500
+            "
+          >
+            Back to Tests
+          </button>
 
-          Score:
-          {" "}
-          {score}
-          {" / "}
-          {total}
-
+          {/* REVIEW */}
+          <button
+            onClick={() =>
+              navigate("/review", {
+                state: {
+                  questions,
+                  userAnswers,
+                },
+              })
+            }
+            className="
+              px-8 py-4
+              rounded-xl
+              bg-green-600
+            "
+          >
+            Review Answers
+          </button>
         </div>
-
-
-
-        <div
-          className="
-            text-3xl
-            text-purple-400
-            mb-10
-          "
-        >
-
-          {percentage}% Accuracy
-
-        </div>
-
-
-
-        <button
-
-          onClick={() =>
-            navigate("/tests")
-          }
-
-          className="
-            px-10
-            py-4
-            rounded-2xl
-            bg-gradient-to-r
-            from-purple-600
-            to-blue-500
-            text-2xl
-            font-bold
-          "
-        >
-
-          Back to Tests
-
-        </button>
-
       </div>
-
     </div>
   );
 };

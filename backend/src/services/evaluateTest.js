@@ -1,65 +1,26 @@
-import Question
-from "../models/Question.js";
+export const evaluateTest = (
+  questions,
+  answers
+) => {
+  let correct = 0;
 
-export const evaluateTest =
-  async (answers) => {
-
-    let score = 0;
-
-    let correctAnswers = 0;
-
-    let wrongAnswers = 0;
-
-
-
-    for (const answer of answers) {
-
-      const question =
-        await Question.findById(
-          answer.questionId
-        );
-
-
-
-      if (
-        question.correctAnswer ===
-        answer.selectedOption
-      ) {
-
-        score += question.marks;
-
-        correctAnswers++;
-
-      } else {
-
-        wrongAnswers++;
-      }
+  questions.forEach((q) => {
+    if (
+      answers[q._id] === q.correctAnswer
+    ) {
+      correct++;
     }
+  });
 
+  const total = questions.length;
+  const wrong = total - correct;
+  const percentage =
+    (correct / total) * 100;
 
-
-    const totalQuestions =
-      answers.length;
-
-
-
-    const percentage =
-      (
-        score / totalQuestions
-      ) * 100;
-
-
-
-    return {
-
-      score,
-
-      correctAnswers,
-
-      wrongAnswers,
-
-      totalQuestions,
-
-      percentage,
-    };
+  return {
+    correct,
+    wrong,
+    total,
+    percentage,
   };
+};

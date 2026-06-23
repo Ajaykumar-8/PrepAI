@@ -23,7 +23,7 @@ import LeaderboardPage
 from "../pages/LeaderboardPage";
 
 import HistoryPage
-from "../pages/HistoryPage";
+from "../features/tests/components/HistoryPage";
 
 import Login
 from "../pages/auth/Login";
@@ -42,6 +42,8 @@ from "../features/tests/pages/TestInterface";
 
 import ResultPage
 from "../pages/ResultPage";
+
+import ReviewAnswers from "../pages/ReviewAnswers";
 
 import NotesPage
 from "../features/notes/pages/NotesPage";
@@ -141,6 +143,17 @@ const AppRoutes = () => {
           <Route
             path="/coding"
             element={<CodingPage />}
+            />
+            
+          <Route
+            path="/result"
+            element={<ResultPage />}
+          />
+            <Route
+              path="/review"
+              element={
+                <ReviewAnswers />
+              }
             />
 
             <Route

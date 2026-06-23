@@ -1,224 +1,170 @@
 import {
+  useEffect,
+  useState,
+} from "react";
 
+import {
+  fetchAnalytics,
+} from "../services/analyticsAPI";
+
+import {
+  fetchTopicAnalytics,
+} from "../services/topicAnalyticsAPI";
+
+import {
   PieChart,
   Pie,
+  Cell,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
   Tooltip,
   ResponsiveContainer,
-  Cell,
-
 } from "recharts";
 
-
-
-const data = [
-
-  {
-    name: "Correct",
-    value: 80,
-  },
-
-  {
-    name: "Wrong",
-    value: 20,
-  },
-];
-
-
-
-const COLORS = [
-
-  "#9333EA",
-  "#2563EB",
-];
-
-
-
 const AnalyticsPage = () => {
+  const [analytics,
+    setAnalytics] =
+    useState(null);
+
+  const [topics,
+    setTopics] =
+    useState([]);
+
+  useEffect(() => {
+    const loadData =
+      async () => {
+        const analyticsData =
+          await fetchAnalytics();
+
+        const topicData =
+          await fetchTopicAnalytics();
+
+        setAnalytics(
+          analyticsData
+        );
+
+        setTopics(
+          topicData
+        );
+      };
+
+    loadData();
+  }, []);
+
+  if (!analytics)
+    return (
+      <div className="text-white">
+        Loading...
+      </div>
+    );
+
+  const pieData = [
+    {
+      name: "Accuracy",
+      value:
+        analytics.averageAccuracy,
+    },
+    {
+      name: "Remaining",
+      value:
+        100 -
+        analytics.averageAccuracy,
+    },
+  ];
 
   return (
-
-    <div
-      className="
-        w-full
-        max-w-7xl
-      "
-    >
-
-      {/* HEADING */}
-      <h1
-        className="
-          text-5xl
-          font-bold
-          mb-8
-        "
-      >
-
+    <div className="p-8 text-white">
+      <h1 className="text-5xl font-bold mb-8">
         Analytics 📊
-
       </h1>
 
-
-
-      {/* STATS */}
-      <div
-        className="
-          grid
-          grid-cols-1
-          md:grid-cols-2
-          xl:grid-cols-4
-          gap-5
-          mb-8
-        "
-      >
-
+      {/* Stats */}
+      <div className="grid md:grid-cols-3 gap-6 mb-8">
         {[
           {
-            title: "Tests Taken",
-            value: "24",
+            title:
+              "Tests Taken",
+            value:
+              analytics.testsTaken,
           },
-
           {
-            title: "Average Score",
-            value: "82%",
+            title:
+              "Avg Score",
+            value:
+              analytics.averageScore,
           },
-
           {
-            title: "Accuracy",
-            value: "80%",
+            title:
+              "Accuracy",
+            value: `${analytics.averageAccuracy}%`,
           },
-
-          {
-            title: "Leaderboard Rank",
-            value: "#12",
-          },
-        ].map((item, index) => (
-
+        ].map((card, i) => (
           <div
-            key={index}
-            className="
-              bg-white/5
-              border
-              border-white/10
-              rounded-3xl
-              p-6
-            "
+            key={i}
+            className="bg-white/5 border border-white/10 rounded-2xl p-6"
           >
-
-            <h2
-              className="
-                text-gray-400
-                text-lg
-                mb-2
-              "
-            >
-
-              {item.title}
-
-            </h2>
-
-
-
-            <p
-              className="
-                text-4xl
-                font-bold
-              "
-            >
-
-              {item.value}
-
+            <p className="text-gray-400">
+              {card.title}
             </p>
-
+            <h2 className="text-4xl font-bold mt-2">
+              {card.value}
+            </h2>
           </div>
         ))}
-
       </div>
 
-
-
-      {/* CHART CARD */}
-      <div
-        className="
-          bg-white/5
-          border
-          border-white/10
-          rounded-3xl
-          p-6
-        "
-      >
-
-        <h2
-          className="
-            text-3xl
-            font-bold
-            mb-6
-          "
-        >
-
-          Performance Overview
-
-        </h2>
-
-
-
-        <div
-          className="
-            w-full
-            h-[350px]
-          "
-        >
+      {/* Charts */}
+      <div className="grid md:grid-cols-2 gap-8">
+        {/* Pie */}
+        <div className="bg-white/5 rounded-2xl p-6">
+          <h2 className="text-2xl font-bold mb-5">
+            Accuracy Overview
+          </h2>
 
           <ResponsiveContainer
             width="100%"
-            height="100%"
+            height={300}
           >
-
             <PieChart>
-
               <Pie
-
-                data={data}
-
+                data={pieData}
                 dataKey="value"
-
-                outerRadius={120}
-
-                label
               >
-
-                {
-                  data.map(
-                    (
-                      entry,
-                      index
-                    ) => (
-
-                      <Cell
-
-                        key={index}
-
-                        fill={
-                          COLORS[index]
-                        }
-                      />
-                    )
-                  )
-                }
-
+                <Cell fill="#9333ea" />
+                <Cell fill="#2563eb" />
               </Pie>
-
-
-
-              <Tooltip />
-
             </PieChart>
-
           </ResponsiveContainer>
-
         </div>
 
-      </div>
+        {/* Bar */}
+        <div className="bg-white/5 rounded-2xl p-6">
+          <h2 className="text-2xl font-bold mb-5">
+            Topic Performance
+          </h2>
 
+          <ResponsiveContainer
+            width="100%"
+            height={300}
+          >
+            <BarChart
+              data={topics}
+            >
+              <XAxis
+                dataKey="_id"
+              />
+              <YAxis />
+              <Tooltip />
+              <Bar
+                dataKey="avgScore"
+                fill="#9333ea"
+              />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
     </div>
   );
 };

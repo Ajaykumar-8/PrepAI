@@ -1,22 +1,33 @@
-import express
-from "express";
+import express from "express";
 
 import {
-  submitResult,
-  getResults,
+  saveResult,
+  getHistory,
+  getAnalytics,
+  getLeaderboard,
 } from "../controllers/resultController.js";
 
 const router =
   express.Router();
 
 router.post(
-  "/submit",
-  submitResult
+  "/save",
+  saveResult
 );
 
 router.get(
-  "/",
-  getResults
+  "/history/:userId",
+  getHistory
+);
+
+router.get(
+  "/analytics/:userId",
+  getAnalytics
+);
+
+router.get(
+  "/leaderboard",
+  getLeaderboard
 );
 
 export default router;

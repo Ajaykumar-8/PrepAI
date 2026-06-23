@@ -1,46 +1,49 @@
-import mongoose
-from "mongoose";
+import mongoose from "mongoose";
 
 const resultSchema =
-  new mongoose.Schema({
+  new mongoose.Schema(
+    {
+      userId: {
+        type: String,
+        required: true,
+      },
 
-    user: {
+      userName: {
+        type: String,
+        required: true,
+      },
 
-      type:
-        mongoose.Schema.Types.ObjectId,
+      topic: {
+        type: String,
+        required: true,
+      },
 
-      ref: "User",
+      difficulty: {
+        type: String,
+        required: true,
+      },
+
+      score: {
+        type: Number,
+        required: true,
+      },
+
+      total: {
+        type: Number,
+        required: true,
+      },
+
+      accuracy: {
+        type: Number,
+        required: true,
+      },
     },
-
-    test: {
-
-      type:
-        mongoose.Schema.Types.ObjectId,
-
-      ref: "Test",
-    },
-
-    score: Number,
-
-    totalQuestions: Number,
-
-    correctAnswers: Number,
-
-    percentage: Number,
-
-    submittedAt: {
-
-      type: Date,
-
-      default: Date.now,
-    },
-
-  });
-
-const Result =
-  mongoose.model(
-    "Result",
-    resultSchema
+    {
+      timestamps: true,
+    }
   );
 
-export default Result;
+export default mongoose.model(
+  "Result",
+  resultSchema
+);

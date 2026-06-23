@@ -1,61 +1,55 @@
-import OptionCard from "./OptionCard";
-
 const QuestionCard = ({
   question,
-  options,
   selectedAnswer,
-  onSelect,
+  handleAnswer,
+  handleNext,
+  currentQuestion,
+  questions,
 }) => {
+  if (!question)
+    return null;
 
   return (
-
-    <div
-      className="
-        bg-white/10
-        p-8
-        rounded-3xl
-      "
-    >
-
-      <h2
-        className="
-          text-3xl
-          font-bold
-          mb-8
-        "
-      >
-
-        {question}
-
+    <div className="bg-white/10 border border-white/10 rounded-2xl p-6 md:p-8">
+      {/* QUESTION */}
+      <h2 className="text-xl md:text-2xl font-semibold mb-6 leading-relaxed">
+        {question.question}
       </h2>
 
-
-
-      <div className="space-y-4">
-
-        {
-          options.map(
-            (
-              option,
-              index
-            ) => (
-
-              <OptionCard
-                key={index}
-                option={option}
-                isSelected={
-                  selectedAnswer === index
-                }
-                onClick={() =>
-                  onSelect(index)
-                }
-              />
-            )
+      {/* OPTIONS */}
+      <div className="grid gap-3">
+        {question?.options?.map(
+          (option, index) => (
+            <button
+              key={index}
+              onClick={() =>
+                handleAnswer(index)
+              }
+              className={`p-4 rounded-xl text-left border transition-all duration-300 ${
+                selectedAnswer === index
+                  ? "bg-gradient-to-r from-purple-600 to-blue-500 border-transparent"
+                  : "bg-black border-white/10 hover:border-purple-500"
+              }`}
+            >
+              {option}
+            </button>
           )
-        }
-
+        )}
       </div>
 
+      {/* NEXT BUTTON */}
+      <button
+        onClick={handleNext}
+        disabled={
+          selectedAnswer === null
+        }
+        className="mt-6 w-full py-4 rounded-xl text-lg font-semibold bg-gradient-to-r from-purple-600 to-blue-500 disabled:opacity-50"
+      >
+        {currentQuestion + 1 ===
+        questions.length
+          ? "Finish Test"
+          : "Next Question"}
+      </button>
     </div>
   );
 };

@@ -1,22 +1,41 @@
-import Result
-from "../models/Result.js";
+import Result from "../models/Result.js";
 
 export const getLeaderboard =
-  async (
-    req,
-    res
-  ) => {
+  async (req, res) => {
+    try {
+      const leaderboard =
+        await Result.aggregate([
+          {
+            $group: {
+              _id: "$userId",
+              totalScore: {
+                $sum: "$score",
+              },
+              testsTaken: {
+                $sum: 1,
+              },
+              avgAccuracy: {
+                $avg:
+                  "$accuracy",
+              },
+            },
+          },
+          {
+            $sort: {
+              totalScore: -1,
+            },
+          },
+        ]);
 
-    const leaderboard =
-      await Result.find()
-      .sort({
-        percentage: -1,
-      })
-      .limit(10)
-      .populate("user");
-
-    res.json({
-      success: true,
-      leaderboard,
-    });
-};
+      res.json({
+        success: true,
+        leaderboard,
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message:
+          error.message,
+      });
+    }
+  };

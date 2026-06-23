@@ -1,43 +1,34 @@
-import {
-  useEffect,
-  useState,
-} from "react";
+import { useEffect, useState } from "react";
 
-const useTestTimer =
-  (
-    duration,
-    onComplete
-  ) => {
+const useTestTimer = (
+  initialTime,
+  testFinished,
+  finishTest
+) => {
+  const [timeLeft, setTimeLeft] =
+    useState(initialTime);
 
-    const [
-      timeLeft,
-      setTimeLeft,
-    ] = useState(duration);
+  useEffect(() => {
+    if (
+      timeLeft <= 0 ||
+      testFinished
+    ) {
+      finishTest();
+      return;
+    }
 
-    useEffect(() => {
+    const timer =
+      setInterval(() => {
+        setTimeLeft(
+          (prev) => prev - 1
+        );
+      }, 1000);
 
-      if (timeLeft <= 0) {
+    return () =>
+      clearInterval(timer);
+  }, [timeLeft, testFinished]);
 
-        onComplete();
-
-        return;
-      }
-
-      const timer =
-        setInterval(() => {
-
-          setTimeLeft(
-            (prev) => prev - 1
-          );
-
-        }, 1000);
-
-      return () =>
-        clearInterval(timer);
-
-    }, [timeLeft]);
-
-    return timeLeft;
+  return timeLeft;
 };
 
 export default useTestTimer;

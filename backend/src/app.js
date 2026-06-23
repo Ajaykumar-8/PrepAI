@@ -56,6 +56,12 @@ from "./routes/testRoutes.js";
 import resultRoutes
 from "./routes/resultRoutes.js";
 
+// ANALYTICS
+import analyticsRoutes from "./routes/analyticsRoutes.js";
+
+// TOPIC ANALYTICS
+import topicAnalyticsRoutes from "./routes/topicAnalyticsRoutes.js";
+
 // LEADERBOARD
 import leaderboardRoutes
 from "./routes/leaderboardRoutes.js";
@@ -75,6 +81,8 @@ from "./routes/codingRoutes.js";
 // QUESTION MANAGEMENT
 import questionRoutes 
 from "./routes/questionRoutes.js";
+
+
 
 // API ROUTES
 
@@ -111,6 +119,16 @@ app.use(
 app.use(
   "/api/results",
   resultRoutes
+);
+
+app.use(
+  "/api/analytics",
+  analyticsRoutes
+);
+
+app.use(
+  "/api/topic-analytics",
+  topicAnalyticsRoutes
 );
 
 app.use(

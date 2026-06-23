@@ -1,14 +1,14 @@
 import express from "express";
 import {
-  getLeaderboard,
-} from "../controllers/leaderboardController.js";
+  getTopicAnalytics,
+} from "../controllers/topicAnalyticsController.js";
 
 const router =
   express.Router();
 
 router.get(
-  "/",
-  getLeaderboard
+  "/:userId",
+  getTopicAnalytics
 );
 
 export default router;

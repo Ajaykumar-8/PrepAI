@@ -1,108 +1,136 @@
-import axios from "axios";
+import Groq from "groq-sdk";
 import Question from "../models/Question.js";
+import dotenv from "dotenv";
+dotenv.config();
+const groq = new Groq({
+  apiKey: process.env.GROQ_API_KEY,
+});
 
-export const generateQuestions = async (req, res) => {
-  try {
-    const { topic, category, difficulty, count } = req.body;
-
-    const prompt = `
-        Generate exactly ${count} MCQ questions on "${topic}".
-
-        Rules:
-        - Keep each question short.
-        - Keep options short.
-        - Return ONLY valid JSON.
-        - No markdown.
-        - No explanation outside JSON.
-        - correctAnswer must be option index (0-3).
-
-        JSON format:
-        [
-        {
-        "question":"Question here",
-        "options":["A","B","C","D"],
-        "correctAnswer":0,
-        "explanation":"Short explanation"
-        }
-        ]
-        `;
-
-    const response = await axios.post(
-      "https://openrouter.ai/api/v1/chat/completions",
-      {
-        model: "openai/gpt-3.5-turbo",
-        messages: [{ role: "user", content: prompt }],
-        max_tokens: 3000,
-        temperature: 0.7,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    const content =
-      response.data.choices[0].message.content;
-
-    let questions;
-
+// GENERATE QUESTIONS
+export const generateQuestions =
+  async (req, res) => {
     try {
-    const cleaned = content
-        .replace(/```json/g, "")
-        .replace(/```/g, "")
-        .trim();
+      const {
+        topic,
+        category,
+        difficulty,
+        count,
+      } = req.body;
 
-    questions = JSON.parse(cleaned);
-    } catch (err) {
-    console.log("JSON Parse Error:", content);
+      const prompt = `
+Generate ${count} unique multiple-choice questions.
 
-    return res.status(500).json({
+Topic: ${topic}
+Category: ${category}
+Difficulty: ${difficulty}
+
+Rules:
+- Return ONLY JSON
+- No explanation outside JSON
+- No markdown
+- No duplicate questions
+
+Format:
+[
+ {
+   "question": "",
+   "options": ["","","",""],
+   "correctAnswer": 0,
+   "topic": "${topic}",
+   "difficulty": "${difficulty}",
+   "category": "${category}",
+   "explanation": ""
+ }
+]
+`;
+
+      const completion =
+        await groq.chat.completions.create({
+          model:
+            "llama-3.1-8b-instant",
+          messages: [
+            {
+              role: "user",
+              content: prompt,
+            },
+          ],
+          temperature: 0.7,
+        });
+
+      const content =
+        completion.choices[0]
+          .message.content;
+
+      // Extract JSON safely
+      const jsonMatch =
+        content.match(/\[[\s\S]*\]/);
+
+      if (!jsonMatch) {
+        throw new Error(
+          "Invalid JSON response from AI"
+        );
+      }
+
+      const questions =
+        JSON.parse(
+          jsonMatch[0]
+        );
+
+      res.status(200).json({
+        success: true,
+        questions,
+      });
+
+    } catch (error) {
+      console.error(
+        "Generate Error:",
+        error.message
+      );
+
+      res.status(500).json({
         success: false,
-        message: "Invalid AI response format",
-    });
+        message:
+          error.message,
+      });
     }
+  };
 
-    const formattedQuestions = questions.map((q) => ({
-      ...q,
-      topic,
-      category,
-      difficulty,
-    }));
 
-    res.status(200).json({
-      success: true,
-      questions: formattedQuestions,
-    });
-  } catch (error) {
-    console.log("AI Error:", error.response?.data || error.message);
+// SAVE QUESTIONS
+export const saveQuestions =
+  async (req, res) => {
+    try {
+      const { questions } =
+        req.body;
 
-    res.status(500).json({
-      success: false,
-      message: "AI generation failed",
-    });
-  }
-};
+      const normalizedQuestions =
+        questions.map((q) => ({
+          ...q,
+          topic:
+            q.topic
+              .trim()
+              .toLowerCase(),
+          difficulty:
+            q.difficulty
+              .trim()
+              .toLowerCase(),
+        }));
 
-export const saveQuestions = async (req, res) => {
-  try {
-    const { questions } = req.body;
+      await Question.insertMany(
+        normalizedQuestions
+      );
 
-    const savedQuestions = await Question.insertMany(
-      questions
-    );
+      res.status(201).json({
+        success: true,
+        message:
+          "Questions saved successfully",
+      });
 
-    res.status(201).json({
-      success: true,
-      savedQuestions,
-    });
-  } catch (error) {
-    console.log(error.message);
-
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
-};
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message:
+          error.message,
+      });
+    }
+  };

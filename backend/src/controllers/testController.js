@@ -1,53 +1,105 @@
 import Question from "../models/Question.js";
 
+
+// GET ALL TESTS (UNIQUE TOPIC WISE)
+export const getTests = async (req, res) => {
+  try {
+    const tests = await Question.aggregate([
+      {
+        $group: {
+          _id: {
+            topic: {
+              $toLower: "$topic",
+            },
+          },
+          totalQuestions: {
+            $sum: 1,
+          },
+          difficulties: {
+            $addToSet: {
+              $toLower: "$difficulty",
+            },
+          },
+          categories: {
+            $addToSet: {
+              $toLower: "$category",
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          topic: "$_id.topic",
+          totalQuestions: 1,
+          difficulties: 1,
+          categories: 1,
+        },
+      },
+      {
+        $sort: {
+          topic: 1,
+        },
+      },
+    ]);
+
+    res.json({
+      success: true,
+      tests,
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+
+// GET RANDOM QUESTIONS
 export const getQuestions = async (req, res) => {
   try {
-    const { topic, difficulty } = req.query;
+    const topic =
+      req.query.topic?.trim().toLowerCase();
 
-    // Count matching questions
-    const totalQuestions =
-      await Question.countDocuments({
-        topic,
-        difficulty,
-      });
+    const difficulty =
+      req.query.difficulty?.trim().toLowerCase();
 
-    console.log(
-      `Topic: ${topic}, Difficulty: ${difficulty}`
-    );
+    const count =
+      Number(req.query.count) || 10;
 
-    console.log(
-      `Matching Questions: ${totalQuestions}`
-    );
-
-    // Get random questions
     const questions =
       await Question.aggregate([
         {
+          $addFields: {
+            normalizedTopic: {
+              $toLower: "$topic",
+            },
+            normalizedDifficulty: {
+              $toLower: "$difficulty",
+            },
+          },
+        },
+        {
           $match: {
-            topic,
-            difficulty,
+            normalizedTopic: topic,
+            normalizedDifficulty: difficulty,
           },
         },
         {
           $sample: {
-            size: Math.min(
-              totalQuestions,
-              10
-            ),
+            size: count,
           },
         },
       ]);
 
-    res.status(200).json({
+    res.json({
       success: true,
-      totalQuestions,
-      returnedQuestions:
-        questions.length,
       questions,
     });
-  } catch (error) {
-    console.error(error);
 
+  } catch (error) {
     res.status(500).json({
       success: false,
       message: error.message,
